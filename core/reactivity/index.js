@@ -52,20 +52,11 @@ class Dep {
 }
 
 // 使用
-function watchEffect(effect) {
+export function watchEffect(effect) {
   effectContainer = effect
   effect()
   effectContainer = null
 }
-
-
-// let dep = new Dep(10)
-
-// watchEffect(() => {
-//   console.log("dep " + dep.value);
-// })
-
-// dep.value = 20
 
 
 /**
@@ -99,7 +90,7 @@ function getDepMap(target, key) {
 }
 
 
-function reactive(raw) {
+export function reactive(raw) {
   return new Proxy(raw, {
     get(target, key) {
       let dep = getDepMap(target, key)
@@ -117,8 +108,9 @@ function reactive(raw) {
     }
   })
 }
-let obj = reactive(user)
-watchEffect(() => {
-  console.log(obj.name);
-})
-obj.name = 'qitianm'
+
+// let obj = reactive(user)
+// watchEffect(() => {
+//   console.log(obj.name);
+// })
+// obj.name = 'qitianm'
