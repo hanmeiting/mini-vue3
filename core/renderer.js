@@ -1,5 +1,6 @@
 // 自定义创建element节点，vue3中的跨平台自定义渲染器就是这么实现的
-function createElement(type) {
+// custom Renderer
+export function createElement(type) {
   // 传入的type是dom就用domapi
   return document.createElement(type)
 }
@@ -9,6 +10,15 @@ function insert(parent, childEle) {
   parent.appendChild(childEle)
 }
 
+// 设置props
+export function patchProp(el, key, prevValue, nextValue) {
+  if (!nextValue) {
+    el.removeAttribute(key);
+  } else {
+    el.setAttribute(key, nextValue);
+  }
+}
+
 // ! 将虚拟dom转化成真实dom
 export function mountElement(vnode, parent) {
   const {
@@ -16,12 +26,13 @@ export function mountElement(vnode, parent) {
     props,
     children
   } = vnode
-  const ele = createElement(type)
+  const ele = (vnode.el = createElement(type))
 
   // 渲染props
   if (props) {
     for (let key in props) {
-      ele.setAttribute(key, props[key])
+      const val = props[key];
+      patchProp(ele, key, null, val);
     }
   }
 
